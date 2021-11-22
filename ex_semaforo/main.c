@@ -7,14 +7,14 @@ Projeto 1. Resolvendo problemas clássicos de concorrência e sincronização us
 Semáforos e Monitores
 --- */
 
-#ifndef MONITOR_H
-#define MONITOR_H
+
+#ifndef SEMAFORO_H
+#define SEMAFORO_H
 
 #include <string.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include "monitor.h"
+#include "semaforo.h"
 #include <unistd.h>
 
 // numero de alunos de SO
@@ -22,7 +22,7 @@ Semáforos e Monitores
 
 // thread de alunos de SO chamando todos os metodos
 void *estudanteSo(void *Iname){
-    SO_entrar_sala(Iname,10);
+    SO_entrar_sala(Iname);
     assinar_lista_entrada(Iname);
     aguardar_apresentacoes(Iname);
     apresentar(Iname);
@@ -33,9 +33,9 @@ void *estudanteSo(void *Iname){
 // thread de alunos de comp chamando todos os metodos
 void *estudanteComp(void *Iname){
 
-    COMP_entrar_sala(Iname,10);
-    assistir_apresentacao(Iname);
-    sair_apresentacao(Iname);
+    COMP_entrar_sala(Iname);
+    // assistir_apresentacao(Iname);
+    // sair_apresentacao(Iname);
     pthread_exit(NULL);
 }
 
@@ -93,11 +93,13 @@ int main(){
         "Elizabethe Coelho","Talles Silva","Marko Henrique",
         "André Pereira", "Thalia Aline"
     };
-    // inicializar monitores
-    initMonitor();
+    // inicializar semáforos
     
+    initSemaphore();
+
+
     // threads de estudantes de SO, estudantes de comp e professor
-    pthread_t estudanteC[N], estudanteSO[N], professor;
+    pthread_t estudanteC[N], estudanteSO[2], professor;
 
     //criar threads
    
@@ -127,8 +129,8 @@ int main(){
     // inicizalizar thread do professor
     pthread_join(professor, NULL);
 
-    //destruir monitores
-    destroyMonitor();
+    //destruir semáforos
+    destroySemaphore();
     
     return 0;
 
