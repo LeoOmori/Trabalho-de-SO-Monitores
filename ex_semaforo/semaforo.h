@@ -16,19 +16,20 @@ Semáforos e Monitores
 
 sem_t 
 mutex,
-roomLockComp,
 semaphoreSO, 
 semaphoreProfessor,
 semaphoreComp, 
 semaphoresPresentation[5], 
-semaphorePresentationLock;
+semaphoreSpectators;
 
 // Numero de lugares disponiveis
-int availablePlace = 10;
 int osStudent = 0;
 int studentPresenting = 0;
 int idPresenting = 0;
+int idSpectationg = 0;
 int presentationNumber = 0;
+int spectatorsNumber = 0;
+int spectatorIndex = 0;
 
 /* --- monitor operations --- */
 void initSemaphore();
@@ -50,7 +51,7 @@ void assinar_lista_saida();
 
 /* --- Métodos dos alunos de c--- */
 void COMP_entrar_sala();
-// void assistir_apresentacao();
-// void sair_apresentacao();
+void assistir_apresentacao();
+void sair_apresentacao();
 
 #endif

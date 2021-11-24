@@ -19,6 +19,7 @@ Semáforos e Monitores
 
 // numero de alunos de SO
 #define N 20
+#define P 25
 
 // thread de alunos de SO chamando todos os metodos
 void *estudanteSo(void *Iname){
@@ -32,9 +33,8 @@ void *estudanteSo(void *Iname){
 
 // thread de alunos de comp chamando todos os metodos
 void *estudanteComp(void *Iname){
-
     COMP_entrar_sala(Iname);
-    // assistir_apresentacao(Iname);
+    assistir_apresentacao(Iname);
     // sair_apresentacao(Iname);
     pthread_exit(NULL);
 }
@@ -50,7 +50,6 @@ void *professorThread(){
     while(j<4){
         liberar_entrada();
         iniciar_apresentacoes();
-        atribuir_nota();
         fechar_porta();
         j++;
     }
@@ -84,14 +83,15 @@ int main(){
     "Montgomery Desport"
     };
 
-    char* namesComp[20] = {
+    char* namesComp[25] = {
         "Jose Lima","Fabio Carlos",
         "Souza lemes","Patricia Karla","Suzana Santos",
         "Joao Carlos","Ronaldo Henrique","Ricardo Filho",
         "Alana Katrine","Pedro Henrike","Jaime Olimpio","Janaina Gonçalves",
         "Caio Akamura","Eduarda Carolina","Ana Paula",
         "Elizabethe Coelho","Talles Silva","Marko Henrique",
-        "André Pereira", "Thalia Aline"
+        "André Pereira", "Thalia Aline","Miguel ferreia","Tabatha maria",
+        "Rosangela souza", "CLaudio alcantara","Jorge Moura"
     };
     // inicializar semáforos
     
@@ -104,7 +104,7 @@ int main(){
     //criar threads
    
     // N thread de estudantes de comp
-    for(int i = 0; i < N; i++){
+    for(int i = 0; i < P; i++){
         pthread_create(&estudanteC[i], NULL, estudanteComp, namesComp[i]);
     }
 
