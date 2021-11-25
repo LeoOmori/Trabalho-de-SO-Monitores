@@ -20,7 +20,8 @@ semaphoreSO,
 semaphoreProfessor,
 semaphoreComp, 
 semaphoresPresentation[5], 
-semaphoreSpectators;
+semaphoreSpectators,
+semaphoreRoomLock;
 
 // Numero de lugares disponiveis
 int osStudent = 0;
@@ -30,6 +31,7 @@ int idSpectationg = 0;
 int presentationNumber = 0;
 int spectatorsNumber = 0;
 int spectatorIndex = 0;
+int roomLock = 1;
 
 /* --- monitor operations --- */
 void initSemaphore();

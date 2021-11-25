@@ -13,6 +13,7 @@ void initSemaphore(){
     sem_init(&semaphoreProfessor,0,0);
     sem_init(&semaphoreSO,0,0);
     sem_init(&semaphoreComp,0,0);
+    sem_init(&semaphoreRoomLock,0,1);
     sem_init(&semaphoreSpectators,0,0);
     for(int i = 0; i < 5; i++)
         sem_init(&semaphoresPresentation[i],0,0);
@@ -37,12 +38,15 @@ void liberar_entrada(){
 }
 
 void atribuir_nota(){
-    printf("NOTA:10\n");
+    int r = rand() % 11;
+    printf("NOTA:%d\n",r);
 }
 
 void iniciar_apresentacoes(){
-
+    sem_wait(&semaphoreRoomLock);
     printf("--Professor Campiolo iniciou as apresentaçoes\n");
+    roomLock = 0;
+    sem_post(&semaphoreRoomLock);
     for(int i = 0; i < 5; i++){
         sem_wait(&mutex);
         studentPresenting = i;
@@ -53,7 +57,11 @@ void iniciar_apresentacoes(){
         atribuir_nota();
         sem_post(&semaphoresPresentation[i]);
         sem_wait(&semaphoreProfessor);
+        sleep(1);
     }
+    sem_wait(&semaphoreRoomLock);
+    roomLock = 1;
+    sem_post(&semaphoreRoomLock);
 }
 
 void fechar_porta(){
@@ -98,7 +106,7 @@ void apresentar(char *i){
     sem_wait(&mutex);
     presentationNumber++;
     sem_post(&mutex);
-    sem_post(&semaphoreSpectators);
+    sem_post(&semaphoreProfessor);
     sem_wait(&semaphoresPresentation[studentPresenting]);
 
 }
@@ -115,11 +123,11 @@ void assinar_lista_saida(char *i){
 void COMP_entrar_sala(char *i){
     sem_wait(&semaphoreComp);
     
-    if(spectatorsNumber < 5){
-        sem_wait(&mutex);
-        spectatorsNumber++;
-        printf("Estudante_de_COMP_%s entrou na sala %d\n", i,spectatorsNumber);
-        sem_post(&mutex);
+    sem_wait(&mutex);
+    spectatorsNumber++;
+    printf("Estudante_de_COMP_%s entrou na sala %d\n", i,spectatorsNumber);
+    sem_post(&mutex);
+    if(spectatorsNumber < 4){
         sem_post(&semaphoreComp);
     }else{
         sem_post(&semaphoreProfessor);
@@ -127,12 +135,21 @@ void COMP_entrar_sala(char *i){
 }
 
 void assistir_apresentacao(char *i){
-    // int r;
-    // r = rand() % 11;
+    int r;
+    while(1){
+        sleep(1);
+        if(!roomLock){
+            r = rand() % 11;
+            if(r<2){
+                break;
+            }
+        }
+    }
 }
 
 void sair_apresentacao(char *i){
     sem_wait(&mutex);
+        printf("Estudante_de_COMP_%s saiu da apresentação\n", i);
         spectatorsNumber--;
     sem_post(&mutex);
 }

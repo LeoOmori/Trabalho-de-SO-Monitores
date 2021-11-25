@@ -35,7 +35,7 @@ void *estudanteSo(void *Iname){
 void *estudanteComp(void *Iname){
     COMP_entrar_sala(Iname);
     assistir_apresentacao(Iname);
-    // sair_apresentacao(Iname);
+    sair_apresentacao(Iname);
     pthread_exit(NULL);
 }
 
