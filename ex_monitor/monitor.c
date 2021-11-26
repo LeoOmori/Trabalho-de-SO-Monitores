@@ -62,15 +62,18 @@ void liberar_entrada(){
 void iniciar_apresentacoes(){
     pthread_mutex_lock(&the_mutex);
     // esperar cinco alunos de SO para comecar as apresentacoes
+    lockedRoom = 1;
     printf("--Professor Campiolo iniciou as apresentações\n");
     while(queuePresentationCount > 0){
         // sinal para a fila de apresentacao
         pthread_cond_signal(&condPresentation);
         // mandar o professor para a fila de espera para esperar o termino a apresentacao
         pthread_cond_wait(&condProfessor, &the_mutex);
+        sleep(1);
         atribuir_nota();
         pthread_cond_signal(&condExit);
         pthread_cond_wait(&condProfessor, &the_mutex);
+        sleep(1);
     }
     pthread_mutex_unlock(&the_mutex);
 }
@@ -92,6 +95,7 @@ void fechar_porta(){
         printf("--Pofessor Campiolo fechou a sala!\n");
         exit(0);
     }
+    pthread_mutex_unlock(&the_mutex);
 }
 
 /* --- Métodos do Aluno de SO--- */
@@ -143,6 +147,7 @@ void apresentar(char *i){
     pthread_mutex_lock(&the_mutex);
     printf("----Estudante_de_SO_%s está apresentando agora!\n",i);
     queuePresentationCount--;
+    presentationNumber++;
     // mandar um sinal para o professor que a apresentacao foi realizada
     pthread_cond_signal(&condProfessor);
     // esperar na fila de saida da sala
@@ -179,6 +184,7 @@ void COMP_entrar_sala(char *i, int occupation){
     }  
     printf("Estudante_de_COMP_%s entrou na sala\n", i);
     // diminuir o contador de lugares aberto
+    printf("%d \n", spectatorsNumber);
     spectatorsNumber++;
     // printf("%d spectator\n", spectatorsNumber);
     // caso o numero de lugares aberto chegar em zero, sinalizar o professor
@@ -192,26 +198,21 @@ void COMP_entrar_sala(char *i, int occupation){
 
 // método para o aluno de computação assistir a apresentação
 void assistir_apresentacao(char *i){
-    pthread_mutex_lock(&the_mutex);
-    int r = 0;
-    // enquanto o aluno nao sair da sala continuar no laco
+    int r;
     while(1){
-        r = rand() % 10;
-        // caso o valor de r seja < 2, o aluno podera sair da sala
-        if(r < 2) {
-            // aumentar o numero de lugares aberto na sala
-            availablePlaces++;
-            break;
+        sleep(1);
+        if(lockedRoom){
+            r = rand() % 11;
+            if(r<2){
+                break;
+            }
         }
-        printf("Estudante_de_COMP_%s está assistindo essa apresentação\n",i);
-        // o aluno entra na fila de espectadores novamente ate a
-        pthread_cond_wait(&condspectators, &the_mutex);
-        
     }
-
 }
 //método para o aluno de computação sair da apresentação
 void sair_apresentacao(char *i){
+    pthread_mutex_lock(&the_mutex);
     printf("Estudante_de_COMP_%s saiu da apresentação\n", i);
+    spectatorsNumber--;
     pthread_mutex_unlock(&the_mutex);
 }
