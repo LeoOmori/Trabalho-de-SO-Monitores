@@ -34,8 +34,8 @@ void *estudanteSo(void *Iname){
 void *estudanteComp(void *Iname){
 
     COMP_entrar_sala(Iname,10);
-    assistir_apresentacao(Iname);
-    sair_apresentacao(Iname);
+    // assistir_apresentacao(Iname);
+    // sair_apresentacao(Iname);
     pthread_exit(NULL);
 }
 
@@ -50,8 +50,8 @@ void *professorThread(){
     while(j<4){
         liberar_entrada();
         iniciar_apresentacoes();
-        atribuir_nota();
-        fechar_porta();
+        // atribuir_nota();
+        // fechar_porta();
         j++;
     }
     pthread_exit(NULL);

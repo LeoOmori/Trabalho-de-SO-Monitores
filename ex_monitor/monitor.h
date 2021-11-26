@@ -28,6 +28,8 @@ pthread_cond_t condProfessor, condSO, condComp, condPresentation, condExit, cond
 
 // /* --- Recursos --- */
 
+//
+int spectatorsNumber = 0;
 // lugares abertos na sala
 int availablePlaces = 10;
 // numeros de estudante de SO na sala
