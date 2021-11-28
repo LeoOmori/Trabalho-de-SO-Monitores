@@ -17,7 +17,7 @@ Semáforos e Monitores
 #include "semaforo.h"
 #include <unistd.h>
 
-// numero de alunos de SO
+// numero de alunos 
 #define N 20
 #define P 25
 
@@ -99,7 +99,7 @@ int main(){
 
 
     // threads de estudantes de SO, estudantes de comp e professor
-    pthread_t estudanteC[N], estudanteSO[2], professor;
+    pthread_t estudanteC[P], estudanteSO[N], professor;
 
     //criar threads
    
